@@ -1,5 +1,7 @@
 import './Analytics.css';
 import React, {useState} from 'react';
+import Modal from '../components/modal/modal';
+import AddItemModal from '../AddItem/AddItem.jsx';
 
 const items = [
   {
@@ -69,6 +71,7 @@ const items = [
 
 function allFilter(){
   console.log('allFilter')
+  
 }
 
 function revenueFilter(){
@@ -79,51 +82,65 @@ function expensesFilter(){
   console.log('expensesFilter')
 }
 
-function addItem(){
-  console.log('addItem')
-}
-
 function openItem(props){
   console.log('openItem', props.target.id)
 }
 
+//Покраска блоков
+function colorize(type) {
+  switch(type) {
+    case 'revenue':
+      return `analytics-list-item_revenue`
+    case 'expenses':
+      return `analytics-list-item_expenses`
+  };
+};
+
+// Отрисовка элемментов списка
+function renderItemsList(itemsList) {
+  const result = itemsList.map((item) => {
+    const { img, title, coast, id, type } = item;
+    return (
+      <div 
+        className={`analytics-list-item ${colorize(type)}`}
+        key={id} 
+        id={id}
+        type={type}
+      >
+        <div className="analytics-list-item__content" id={id} onClick={openItem}>
+          <img className="content__image" src={img} alt=""/>
+          <div className="content__title">{title}</div>
+          <div className="content__coast">{coast}</div>
+        </div>
+      </div>
+    );
+  });
+  return result;
+};
+
+function addItem( img, title, coast, id, type ){
+  const newItem = {
+    itemImg: img, 
+    itemTitle: title, 
+    itemCoast: coast, 
+    itemId: id, 
+    itemType: type
+  }
+  items.unshift(newItem)
+}
+
 // Отрисовка списка
 function AnalyticsList() {
-  const [page, setPage] = useState('revenue');
+  const [itemsList, setItems] = useState(renderItemsList(items))
+  const [isModalActive, setModalActive] = useState(false);
 
-  // Отрисовка элемментов списка
-  const renderItemsList = (itemsList) => {
-    //Покраска блоков
-    const colorize = (type) => {
-      switch(type) {
-        case 'revenue':
-          return `analytics-list-item_revenue`
-        case 'expenses':
-          return `analytics-list-item_expenses`
-      };
-    };
-
-    const result = itemsList.map((item) => {
-      const { img, title, coast, id, type } = item;
-      return (
-        <div 
-          className={`analytics-list-item ${colorize(type)}`}
-          key={id} 
-          id={id}
-          type={type}
-        >
-          <div className="analytics-list-item__content" id={id} onClick={openItem}>
-            <img className="content__image" src={img} alt=""/>
-            <div className="content__title">{title}</div>
-            <div className="content__coast">{coast}</div>
-          </div>
-        </div>
-      );
-    });
-
-    return result;
+  const handleModalOpen = () => {
+    setModalActive(true);
   };
-  
+  const handleModalClose = () => {
+    setModalActive(false);
+  };
+
   return(
     <div className='analytics-window'>
       <div className="analytics-menu">
@@ -132,9 +149,16 @@ function AnalyticsList() {
         <button className='analytics-menu__button' onClick={expensesFilter}>Расходы</button>
       </div>
       <div className="analytics-list">
-        {renderItemsList(items)}
+        {itemsList}
       </div>
-        <button className='analytics-add-button' onClick={addItem}>Добавить</button>
+      <button className='analytics-add-button' onClick={handleModalOpen}>Добавить</button>
+      <div>
+        {isModalActive && (
+          <Modal title="Добавить" onClose={handleModalClose}>
+            <AddItemModal/>
+          </Modal>
+        )}
+      </div>
     </div>
   )
 }

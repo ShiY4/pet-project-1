@@ -1,0 +1,38 @@
+.add-item-modal-container{
+    color: var(--main-font-color);
+    width: 600px;
+    height: 300px;
+    background-color: var(--main-bg-color);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 50px;
+    border-radius: 20px;
+    padding: 15px;
+}
+
+.form{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    gap: 25px;
+}
+
+.form-item{
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
+
+.form-item__input{
+    
+}
+
+.toggle{
+    
+}
+
+.btn{
+
+}
