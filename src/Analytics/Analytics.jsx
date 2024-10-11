@@ -69,22 +69,9 @@ const items = [
   },
 ]
 
-function allFilter(){
-  console.log('allFilter')
-  
-}
-
-function revenueFilter(){
-  console.log('revenueFilter')
-}
-
-function expensesFilter(){
-  console.log('expensesFilter')
-}
-
 function openItem(props){
   console.log('openItem', props.target.id)
-}
+};
 
 //Покраска блоков
 function colorize(type) {
@@ -93,6 +80,8 @@ function colorize(type) {
       return `analytics-list-item_revenue`
     case 'expenses':
       return `analytics-list-item_expenses`
+    default:
+      throw new Error('unknown type')
   };
 };
 
@@ -106,8 +95,9 @@ function renderItemsList(itemsList) {
         key={id} 
         id={id}
         type={type}
+        onClick={openItem}
       >
-        <div className="analytics-list-item__content" id={id} onClick={openItem}>
+        <div className="analytics-list-item__content">
           <img className="content__image" src={img} alt=""/>
           <div className="content__title">{title}</div>
           <div className="content__coast">{coast}</div>
@@ -118,25 +108,40 @@ function renderItemsList(itemsList) {
   return result;
 };
 
-function addItem( img, title, coast, id, type ){
+function addItem( img, title, coast, id, type, props ){
+  console.log('asd');
   const newItem = {
     itemImg: img, 
     itemTitle: title, 
     itemCoast: coast, 
     itemId: id, 
     itemType: type
-  }
-  items.unshift(newItem)
+  };
+  // items.unshift(newItem)
 }
 
 // Отрисовка списка
 function AnalyticsList() {
-  const [itemsList, setItems] = useState(renderItemsList(items))
+  const [itemsList, setItems] = useState(renderItemsList(items));
   const [isModalActive, setModalActive] = useState(false);
 
+  //Функция фильтрации списка
+  function filterItems(e) {
+    const filtertype = e.target.getAttribute('filtertype')
+    if (filtertype === 'all') {
+      setItems(renderItemsList(items));
+    } else{
+      const result = items.filter((item) => item.type === filtertype);
+      console.log(result);
+      setItems(renderItemsList(result));
+    };
+  };
+
+  //Открытие модального окна
   const handleModalOpen = () => {
     setModalActive(true);
   };
+  //Закрытие модального окна
   const handleModalClose = () => {
     setModalActive(false);
   };
@@ -144,9 +149,9 @@ function AnalyticsList() {
   return(
     <div className='analytics-window'>
       <div className="analytics-menu">
-        <button className='analytics-menu__button' onClick={revenueFilter}>Доходы</button>
-        <button className='analytics-menu__button' onClick={allFilter}>Все</button>
-        <button className='analytics-menu__button' onClick={expensesFilter}>Расходы</button>
+        <button className='analytics-menu__button' type='button' filtertype='revenue' onClick={filterItems}>Доходы</button>
+        <button className='analytics-menu__button' type='button' filtertype='all' onClick={filterItems}>Все</button>
+        <button className='analytics-menu__button' type='button' filtertype='expenses' onClick={filterItems}>Расходы</button>
       </div>
       <div className="analytics-list">
         {itemsList}
@@ -160,8 +165,8 @@ function AnalyticsList() {
         )}
       </div>
     </div>
-  )
-}
+  );
+};
 
 function Analytics() {
   return(
@@ -170,7 +175,7 @@ function Analytics() {
         <AnalyticsList/>
       </div>
     </div>
-  )
-}
+  );
+};
 
 export default Analytics;

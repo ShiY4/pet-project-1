@@ -1,6 +1,6 @@
 .add-item-modal-container{
     color: var(--main-font-color);
-    width: 600px;
+    width: 450px;
     height: 300px;
     background-color: var(--main-bg-color);
     display: flex;
@@ -26,7 +26,22 @@
 }
 
 .form-item__input{
-    
+    width: 200px;
+    height: 30px;
+    border-radius: 20px;
+    background-color: var(--second-bg-color);
+    border: none;
+    color: var(--main-font-color);
+    text-align: center;
+}
+
+.form-item__input::placeholder{
+    color: var(--blocked-font-color);
+    text-align: center;
+}
+
+.form-item__input option {
+    color:  aqua ;
 }
 
 .toggle{
