@@ -1,28 +1,51 @@
 .add-item-modal-container{
-    color: var(--main-font-color);
-    width: 450px;
-    height: 300px;
+    color: var(--white-font-color);
+    min-width: 300px;
+    min-height: 300px;
     background-color: var(--main-bg-color);
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 50px;
+    gap: 25px;
     border-radius: 20px;
-    padding: 15px;
+    padding: 12px;
+    justify-content: space-around;
 }
 
 .form{
+    display: flex;
+    gap: 20px;
+}
+
+.form-main-info{
     width: 100%;
     display: flex;
-    flex-direction: column;
-    align-items: start;
+    flex-direction: row;
+    align-items: center;
     gap: 25px;
 }
 
-.form-item{
+.form-main-info-block{
+    width: 100%;
     display: flex;
-    flex-direction: row;
-    gap: 10px;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.form-main-info-block:last-child::before{
+    left: 224px;
+    top: 25px;
+    position: absolute;
+    content: '';
+    display: inline-block;
+    height: 210px;
+    width: 1px;
+    background: linear-gradient( var(--main-bg-color) 0%, rgba(95, 95, 95, 0.4) 20%, rgb(95, 95, 95, 0.4) 80%, var(--main-bg-color) 100%);
+}
+
+/* Основные инпуты формы */
+.form-item{
+
 }
 
 .form-item__input{
@@ -31,7 +54,7 @@
     border-radius: 20px;
     background-color: var(--second-bg-color);
     border: none;
-    color: var(--main-font-color);
+    color: var(--white-font-color);
     text-align: center;
 }
 
@@ -41,13 +64,134 @@
 }
 
 .form-item__input option {
-    color:  aqua ;
+    color:  var(--main-font) ;
 }
 
-.toggle{
-    
+.form-item__input_date::placeholder{
+    background-color: #fff;
 }
 
-.btn{
+/* Кнопки Расходы/Доходы */
+.form-item_buttons{
+    display: flex;
+    justify-content: space-between;
+    width: 200px;
+}
 
+.form-button{
+    border: 1px solid white;
+    transition: 0.3s;
+    color: var(--white-font-color);
+    border-radius: 20px;
+    height: 30px;
+    width: 90px;
+    text-align: center;
+    font-weight: 500;
+    font-family: var(--main-font);
+}
+
+.form-button_expenses{
+
+}
+
+.form-button_active-expenses{
+    background-color: var(--expenses-color);
+}
+
+.form-button_expenses:hover{
+    background-color: var(--expenses-color);
+    box-shadow:var(--expenses-color) 0px 0px 5px, 
+    var(--expenses-color) 0px 0px 1px,
+    var(--expenses-color) 0px 0px 2px,
+    var(--expenses-color) 0px 0px 3px,
+    var(--expenses-color) 0px 0px 8px,
+    var(--expenses-color) 0px 0px 12px,
+    var(--expenses-color) 0px 0px 18px,
+    var(--expenses-color) 0px 0px 25px;
+}
+
+.form-button_expenses:focus{
+    background-color: var(--expenses-color);
+    border: none;
+}
+
+.form-button_revenue{
+
+}
+
+.form-button_active-revenue{
+    background-color: var(--revenue-color);
+}
+
+.form-button_revenue:hover{
+    background-color: var(--revenue-color);
+    box-shadow:var(--revenue-color) 0px 0px 5px, 
+    var(--revenue-color) 0px 0px 1px,
+    var(--revenue-color) 0px 0px 2px,
+    var(--revenue-color) 0px 0px 3px,
+    var(--revenue-color) 0px 0px 8px,
+    var(--revenue-color) 0px 0px 12px,
+    var(--revenue-color) 0px 0px 18px,
+    var(--revenue-color) 0px 0px 25px;
+}
+
+.form-button_revenue:focus{
+    background-color: var(--revenue-color);
+    border: none;
+}
+
+/* Описание */
+.form-main-description{
+    height: 85px;
+    transition: 0.3s;
+}
+
+.form-main-description__textarea{
+    resize: none;
+    height: 100%;
+    border: 1px solid;
+    border-radius: 20px;
+    padding: 15px;
+}
+
+.form-main-description__textarea::-webkit-scrollbar {
+    display: none;
+}
+
+
+/* Нижний кнопочный блок */
+.add-item-modal-buttons{
+    display: flex;
+    justify-content: space-between;
+    min-width: 200px;
+}
+
+.add-item-modal-buttons__button{
+    border: 1px solid white;
+    color: var(--white-font-color);
+    border-radius: 20px;
+    height: 40px;
+    min-width: 90px;
+    text-align: center;
+    font-weight: 500;
+    font-family: var(--main-font);
+}
+
+.add-item-modal-buttons__button_add{
+    background-color: #fff;
+    color: var(--black-font-color);
+}
+
+.add-item-modal-buttons__button_cancel{
+
+}
+
+.add-item-modal-buttons__button_add:hover, .add-item-modal-buttons__button:focus{
+    background-color: #558abb;
+    color: var(--white-font-color);
+}
+
+.add-item-modal-buttons__button_cancel:hover, .add-item-modal-buttons__button_cancel:focus{
+    background-color: #fff;
+    color: #000;
 }

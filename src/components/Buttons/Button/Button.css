@@ -1,0 +1,11 @@
+.button {
+    padding: 5px;
+    border: none;
+    background: none;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.button:hover {
+    transition: 0.3s;
+}

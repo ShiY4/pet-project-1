@@ -9,13 +9,13 @@
     display: flex;
     align-items: center;
     justify-content: center;
-  }
-  
-  .content {
+}
+
+.content {
     position: relative;
-  }
-  
-  .closeButton {
+}
+
+.closeButton {
     position: absolute;
     width: 40px;
     height: 40px;
@@ -27,9 +27,19 @@
     cursor: pointer;
     background: none;
     color: rgba(255, 255, 255, 0.6);
-  }
-  
-  .closeButton:hover {
-    color: rgb(0, 0, 0, 1);
-  }
-  
+    transition: 0.3s;
+    font-weight: 700;
+}
+
+.closeButton:hover {
+    color: rgb(247, 62, 62);
+    text-shadow:rgb(247, 62, 62) 0px 0px 5px, 
+    rgb(247, 62, 62) 0px 0px 10px,
+    rgb(247, 62, 62) 0px 0px 15px,
+    #FF2D95 0px 0px 20px,
+    #FF2D95 0px 0px 30px,
+    #FF2D95 0px 0px 40px,
+    #FF2D95 0px 0px 50px,
+    #FF2D95 0px 0px 75px;
+    transition: 0.3s;
+}

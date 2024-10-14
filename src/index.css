@@ -9,7 +9,7 @@ body{
   padding: 0;
   box-sizing: border-box;
   font-family: var(--main-font);
-  color: var(--main-font-color);
+  color: var(--white-font-color);
   background-color: var(--main-bg-color);
 }
 
@@ -24,10 +24,16 @@ body{
   --main-color: #000000;
   --main-bg-color: #131313;
   --second-bg-color: #1d1d1d;
+  --white-bg: #fff;
+  --black-bg: #000000;
 
-  --main-font-color: #ffffff;
+  --white-font-color: #ffffff;
+  --black-font-color: #000000;
   --main-font-bg-color: #558abb;
   --blocked-font-color: #7e8286;
+
+  --revenue-color: #45b34e;
+  --expenses-color: #d12b2b;
   
 }
 

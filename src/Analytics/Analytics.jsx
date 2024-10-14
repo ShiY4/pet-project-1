@@ -1,8 +1,9 @@
-import './Analytics.css';
 import React, {useState} from 'react';
-import Modal from '../components/modal/modal';
+import Modal from '../components/Modal/Modal.jsx';
 import AddItemModal from '../AddItem/AddItem.jsx';
+import './Analytics.css';
 
+//Хардкод айтемов
 const items = [
   {
     id: 1,
@@ -69,6 +70,7 @@ const items = [
   },
 ]
 
+//Развернуть айтем
 function openItem(props){
   console.log('openItem', props.target.id)
 };
@@ -132,7 +134,6 @@ function AnalyticsList() {
       setItems(renderItemsList(items));
     } else{
       const result = items.filter((item) => item.type === filtertype);
-      console.log(result);
       setItems(renderItemsList(result));
     };
   };
@@ -149,9 +150,9 @@ function AnalyticsList() {
   return(
     <div className='analytics-window'>
       <div className="analytics-menu">
-        <button className='analytics-menu__button' type='button' filtertype='revenue' onClick={filterItems}>Доходы</button>
-        <button className='analytics-menu__button' type='button' filtertype='all' onClick={filterItems}>Все</button>
-        <button className='analytics-menu__button' type='button' filtertype='expenses' onClick={filterItems}>Расходы</button>
+        <button className='button analytics-menu__button' type='button' filtertype='revenue' onClick={filterItems}>Доходы</button>
+        <button className='button analytics-menu__button' type='button' filtertype='all' onClick={filterItems}>Все</button>
+        <button className='button analytics-menu__button' type='button' filtertype='expenses' onClick={filterItems}>Расходы</button>
       </div>
       <div className="analytics-list">
         {itemsList}

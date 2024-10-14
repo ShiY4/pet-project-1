@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from "react"; 
-import Portal, { createContainer } from "../portal/portal.jsx"; 
-import "./modal.css"; 
+import Portal, { createContainer } from "../Portal/Portal.jsx"; 
+import "./Modal.css"; 
 
 const MODAL_CONTAINER_ID = "modal-container-id"; 
 
@@ -46,14 +46,14 @@ const Modal = (props) => {
     <Portal id={MODAL_CONTAINER_ID}> 
       <div className='wrap' ref={rootRef} data-testid="wrap"> 
         <div className='content'> 
-          <button 
+          {/* <button 
             type="button" 
             className='closeButton' 
             onClick={handleClose} 
             data-testid="modal-close-button" 
           > 
             X
-          </button> 
+          </button>  */}
           {children} 
         </div> 
       </div> 

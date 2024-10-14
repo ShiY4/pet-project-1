@@ -1,0 +1,54 @@
+.toggle-container{
+    display: flex;
+    position: relative;
+    height: 30px;
+    width: 200px;
+}
+
+.toggle-switch__input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.toggle-switch__span {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 60px;
+    transition: 0.3s;
+    cursor: pointer;
+    background: var(--second-bg-color);
+    border-radius: 30px;
+}
+
+.toggle-switch__span:before {
+    position: absolute;
+    content: "";
+    height: 25px;
+    width: 25px;
+    left: 3px;
+    bottom: 2.6px;
+    background-color: #fff;
+    border-radius: 50%;
+    transition: 0.3s;
+}
+
+.toggle-switch__input:checked + .toggle-switch__span {
+    background-color: #02bb4f;
+}
+
+.toggle-switch__input:checked + .toggle-switch__span:before {
+    transform: translateX(29px);
+}
+
+.toggle-title {
+    position: absolute;
+    right: 0;
+    width: max-content;
+    line-height: 30px;
+    margin-left: 10px;
+    cursor: pointer;
+}
