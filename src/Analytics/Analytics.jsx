@@ -1,74 +1,20 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import Modal from '../components/Modal/Modal.jsx';
 import AddItemModal from '../AddItem/AddItem.jsx';
 import './Analytics.css';
 
-//Хардкод айтемов
-const items = [
-  {
-    id: 1,
-    type: 'revenue',
-    img: "x",
-    title: 'Название1',
-    coast: 1000,
-  },
-  {
-    id: 2,
-    type: 'revenue',
-    img: "x",
-    title: 'Название2',
-    coast: 3000,
-  },
-  {
-    id: 3,
-    type: 'expenses',
-    img: "x",
-    title: 'Название3',
-    coast: 2000,
-  },
-  {
-    id: 4,
-    type: 'expenses',
-    img: "x",
-    title: 'Название4',
-    coast: 2500,
-  },
-  {
-    id: 5,
-    type: 'expenses',
-    img: "x",
-    title: 'Название5',
-    coast: 2500,
-  },
-  {
-    id: 6,
-    type: 'revenue',
-    img: "x",
-    title: 'Название6',
-    coast: 2500,
-  },
-  {
-    id: 7,
-    type: 'revenue',
-    img: "x",
-    title: 'Название7',
-    coast: 2500,
-  },
-  {
-    id: 8,
-    type: 'expenses',
-    img: "x",
-    title: 'Название8',
-    coast: 2500,
-  },
-  {
-    id: 9,
-    type: 'revenue',
-    img: "x",
-    title: 'Название9',
-    coast: 2500,
-  },
-]
+//Firebase
+import { collection, getDocs, onSnapshot, doc } from 'firebase/firestore';
+import db from '../firebase/firebase.js';
+
+//Получение сслыки на коллекцию айтемов из базы данных
+const itemsCollectionRef = collection(db, 'users', 'user', 'items');
+async function getItems (){
+  const data = await getDocs(itemsCollectionRef);
+  return data.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
+};
+let items = await getItems()
+
 
 //Развернуть айтем
 function openItem(props){
@@ -90,7 +36,7 @@ function colorize(type) {
 // Отрисовка элемментов списка
 function renderItemsList(itemsList) {
   const result = itemsList.map((item) => {
-    const { img, title, coast, id, type } = item;
+    const { img, title, coast, id, type,  date, category, description} = item;
     return (
       <div 
         className={`analytics-list-item ${colorize(type)}`}
@@ -110,22 +56,32 @@ function renderItemsList(itemsList) {
   return result;
 };
 
-function addItem( img, title, coast, id, type, props ){
-  console.log('asd');
-  const newItem = {
-    itemImg: img, 
-    itemTitle: title, 
-    itemCoast: coast, 
-    itemId: id, 
-    itemType: type
-  };
-  // items.unshift(newItem)
-}
-
 // Отрисовка списка
 function AnalyticsList() {
   const [itemsList, setItems] = useState(renderItemsList(items));
   const [isModalActive, setModalActive] = useState(false);
+
+  //Обновление списка при добавлении\удалении айтема
+  useEffect(() => {
+    const unsubscribe = onSnapshot(itemsCollectionRef, (snapshot) => {
+      snapshot.docChanges().forEach(async (change) => {
+        if (change.type === 'added') {
+          items = await getItems();
+          console.log('Новый айтем добавлен:');
+          setItems(renderItemsList(items));
+        } else if (change.type === 'modified') {
+          console.log('Пользователь обновлен:');
+          // Обновите itemsList, если необходимо
+        } else if (change.type === 'removed') {
+          console.log('Пользователь удален:');
+          // Обновите itemsList, если необходимо
+        }
+      });
+    });
+
+    return () => unsubscribe();
+  }, []);
+  
 
   //Функция фильтрации списка
   function filterItems(e) {

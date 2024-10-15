@@ -46,15 +46,7 @@ const Modal = (props) => {
     <Portal id={MODAL_CONTAINER_ID}> 
       <div className='wrap' ref={rootRef} data-testid="wrap"> 
         <div className='content'> 
-          {/* <button 
-            type="button" 
-            className='closeButton' 
-            onClick={handleClose} 
-            data-testid="modal-close-button" 
-          > 
-            X
-          </button>  */}
-          {children} 
+          {React.cloneElement(children, { onModalClose: handleClose })}
         </div> 
       </div> 
     </Portal> 

@@ -72,6 +72,18 @@
 }
 
 /* Кнопки Расходы/Доходы */
+.button {
+    padding: 5px;
+    border: none;
+    background: none;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.button:hover {
+    transition: 0.3s;
+}
+
 .form-item_buttons{
     display: flex;
     justify-content: space-between;
