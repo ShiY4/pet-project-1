@@ -1,10 +1,11 @@
 import React, {useState, useEffect} from 'react';
 import Modal from '../components/Modal/Modal.jsx';
-import AddItemModal from '../AddItem/AddItem.jsx';
+import AddItemModal from '../ItemsModalWindows/AddItem/AddItem.jsx';
+import OpenItemModal from '../ItemsModalWindows/OpenItem/OpenItem.jsx';
 import './Analytics.css';
 
 //Firebase
-import { collection, getDocs, onSnapshot, doc } from 'firebase/firestore';
+import { collection, getDocs, onSnapshot } from 'firebase/firestore';
 import db from '../firebase/firebase.js';
 
 //Получение сслыки на коллекцию айтемов из базы данных
@@ -15,37 +16,24 @@ async function getItems (){
 };
 let items = await getItems()
 
+// Рендер элемментов списка
+function renderItemsList(itemsList, openItemClick) {
 
-//Развернуть айтем
-function openItem(props){
-  console.log('openItem', props.target.id)
-};
-
-//Покраска блоков
-function colorize(type) {
-  switch(type) {
-    case 'revenue':
-      return `analytics-list-item_revenue`
-    case 'expenses':
-      return `analytics-list-item_expenses`
-    default:
-      throw new Error('unknown type')
+  const colors = {
+    'revenue': `analytics-list-item_revenue`,
+    'expenses':`analytics-list-item_expenses`
   };
-};
 
-// Отрисовка элемментов списка
-function renderItemsList(itemsList) {
   const result = itemsList.map((item) => {
     const { img, title, coast, id, type,  date, category, description} = item;
     return (
-      <div 
-        className={`analytics-list-item ${colorize(type)}`}
-        key={id} 
-        id={id}
-        type={type}
-        onClick={openItem}
-      >
-        <div className="analytics-list-item__content">
+      <div className={`analytics-list-item ${colors[type]}`} key={id}>
+        <div className="analytics-list-item__content"
+          key={id}
+          id={id}
+          type={type}
+          onClick={openItemClick}
+        >
           <img className="content__image" src={img} alt=""/>
           <div className="content__title">{title}</div>
           <div className="content__coast">{coast}</div>
@@ -58,8 +46,15 @@ function renderItemsList(itemsList) {
 
 // Отрисовка списка
 function AnalyticsList() {
-  const [itemsList, setItems] = useState(renderItemsList(items));
-  const [isModalActive, setModalActive] = useState(false);
+  const [ itemsList, setItems ] = useState(renderItemsList(items, (e) => hand(e)));
+  const [ isModalActive, setModalActive ] = useState(false);
+  const [ isOpenItemModal, setOpenItemModal ] = useState(false);
+  const [ id, setId ] = useState('');
+
+  function hand(e) {
+    setOpenItemModal(true)
+    setId(e.currentTarget.id)
+  }
 
   //Обновление списка при добавлении\удалении айтема
   useEffect(() => {
@@ -68,7 +63,7 @@ function AnalyticsList() {
         if (change.type === 'added') {
           items = await getItems();
           console.log('Новый айтем добавлен:');
-          setItems(renderItemsList(items));
+          setItems(renderItemsList(items, (e) => hand(e)));
         } else if (change.type === 'modified') {
           console.log('Пользователь обновлен:');
           // Обновите itemsList, если необходимо
@@ -84,23 +79,14 @@ function AnalyticsList() {
   
 
   //Функция фильтрации списка
-  function filterItems(e) {
+  const filterItems = (e) => {
     const filtertype = e.target.getAttribute('filtertype')
     if (filtertype === 'all') {
-      setItems(renderItemsList(items));
+      setItems(renderItemsList(items, () => setOpenItemModal(true)));
     } else{
       const result = items.filter((item) => item.type === filtertype);
-      setItems(renderItemsList(result));
+      setItems(renderItemsList(result, () => setOpenItemModal(true)));
     };
-  };
-
-  //Открытие модального окна
-  const handleModalOpen = () => {
-    setModalActive(true);
-  };
-  //Закрытие модального окна
-  const handleModalClose = () => {
-    setModalActive(false);
   };
 
   return(
@@ -113,13 +99,17 @@ function AnalyticsList() {
       <div className="analytics-list">
         {itemsList}
       </div>
-      <button className='analytics-add-button' onClick={handleModalOpen}>Добавить</button>
+      <button className='analytics-add-button' onClick={(e) => setModalActive(true)}>Добавить</button>
       <div>
-        {isModalActive && (
-          <Modal title="Добавить" onClose={handleModalClose}>
+        {(isModalActive && (
+          <Modal onClose={(e) => setModalActive(false)}>
             <AddItemModal/>
           </Modal>
-        )}
+        )) || (isOpenItemModal && (
+          <Modal id={id} itemsList={items} onClose={(e) => setOpenItemModal(false)}>
+            <OpenItemModal/>
+          </Modal>
+        ))}
       </div>
     </div>
   );

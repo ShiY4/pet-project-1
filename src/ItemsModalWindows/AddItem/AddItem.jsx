@@ -1,10 +1,10 @@
-import { Toggle } from '../components/Buttons/ToggleButton/ToggleButton';
+import { Toggle } from '../../components/Buttons/ToggleButton/ToggleButton.jsx';
 import React, {useState} from 'react';
 import './AddItem.css';
 
 //Firebase
 import { collection, getDocs, addDoc } from 'firebase/firestore';
-import db from '../firebase/firebase.js';
+import db from '../../firebase/firebase.js';
 
 //Хардкод категорий
 const categories1 = [
@@ -23,8 +23,6 @@ function renderCategories(categoriesArr) {
   })
   return result;
 }
-
-
 
 function AddItemModal({ onModalClose }) {
   const [ title, setTitle ] = useState(''); //Стейт названия
@@ -126,10 +124,10 @@ function AddItemModal({ onModalClose }) {
         <div className="form-main-info">
           <div className="form-main-info-block">
             <div className='form-item'>
-              <input className='form-item__input form-item__input_title' type="text" onInput={titleValidation} placeholder='Название'/>
+              <input className='form-item__input form-item__input_title' type="text" onChange={titleValidation} placeholder='Название'/>
             </div>
             <div className='form-item'>
-              <input className='form-item__input form-item__input_coast' type="text" onInput={coastValidation} placeholder='Сумма'/>
+              <input className='form-item__input form-item__input_coast' type="text" onChange={coastValidation} placeholder='Сумма'/>
             </div>
             <div className='form-item form-item_buttons'>
               <button

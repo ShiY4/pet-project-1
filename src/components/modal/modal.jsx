@@ -5,7 +5,7 @@ import "./Modal.css";
 const MODAL_CONTAINER_ID = "modal-container-id"; 
 
 const Modal = (props) => { 
-  const { title, onClose, children } = props; 
+  const { id, itemsList, onClose, children } = props; 
 
   const rootRef = useRef(null); 
   const [isMounted, setMounted] = useState(false); 
@@ -46,7 +46,7 @@ const Modal = (props) => {
     <Portal id={MODAL_CONTAINER_ID}> 
       <div className='wrap' ref={rootRef} data-testid="wrap"> 
         <div className='content'> 
-          {React.cloneElement(children, { onModalClose: handleClose })}
+          {React.cloneElement(children, { onModalClose: handleClose, itemsList: itemsList, id:id })}
         </div> 
       </div> 
     </Portal> 
