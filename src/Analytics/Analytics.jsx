@@ -106,8 +106,8 @@ function AnalyticsList() {
             <AddItemModal/>
           </Modal>
         )) || (isOpenItemModal && (
-          <Modal id={id} itemsList={items} onClose={(e) => setOpenItemModal(false)}>
-            <OpenItemModal/>
+          <Modal onClose={(e) => setOpenItemModal(false)}>
+            <OpenItemModal id={id} itemsList={items}/>
           </Modal>
         ))}
       </div>

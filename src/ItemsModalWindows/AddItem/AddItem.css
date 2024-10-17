@@ -1,6 +1,5 @@
 .add-item-modal-container{
     color: var(--white-font-color);
-    min-width: 300px;
     min-height: 300px;
     background-color: var(--main-bg-color);
     display: flex;
@@ -32,7 +31,8 @@
     gap: 25px;
 }
 
-.form-main-info-block:last-child::before{
+/* Разделительная линия между двумя блоками модалки */
+/* .form-main-info-block:last-child::before{
     left: 224px;
     top: 25px;
     position: absolute;
@@ -41,7 +41,7 @@
     height: 210px;
     width: 1px;
     background: linear-gradient( var(--main-bg-color) 0%, rgba(95, 95, 95, 0.4) 20%, rgb(95, 95, 95, 0.4) 80%, var(--main-bg-color) 100%);
-}
+} */
 
 /* Основные инпуты формы */
 .form-item{
@@ -122,7 +122,7 @@
     var(--expenses-color) 0px 0px 25px;
 }
 
-.form-button_expenses:focus{
+.form-button_expenses:focus, .form-button_expenses_active{
     background-color: var(--expenses-color);
     border: none;
 }
@@ -147,7 +147,7 @@
     var(--revenue-color) 0px 0px 25px;
 }
 
-.form-button_revenue:focus{
+.form-button_revenue:focus, .form-button_revenue_active{
     background-color: var(--revenue-color);
     border: none;
 }

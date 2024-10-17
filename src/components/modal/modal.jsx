@@ -4,7 +4,7 @@ import "./Modal.css";
 
 const MODAL_CONTAINER_ID = "modal-container-id"; 
 
-const Modal = (props) => { 
+const Modal = (props) => {
   const { id, itemsList, onClose, children } = props; 
 
   const rootRef = useRef(null); 
@@ -37,7 +37,7 @@ const Modal = (props) => {
       window.removeEventListener("keydown", handleEscapePress); 
     }; 
   }, [onClose]); 
-
+  
   const handleClose = useCallback(() => { 
     onClose?.(); 
   }, [onClose]); 
@@ -46,7 +46,7 @@ const Modal = (props) => {
     <Portal id={MODAL_CONTAINER_ID}> 
       <div className='wrap' ref={rootRef} data-testid="wrap"> 
         <div className='content'> 
-          {React.cloneElement(children, { onModalClose: handleClose, itemsList: itemsList, id:id })}
+          {React.cloneElement(children, { onModalClose: handleClose })}
         </div> 
       </div> 
     </Portal> 
