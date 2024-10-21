@@ -13,21 +13,15 @@
 
 .form{
     display: flex;
+    flex-direction: column;
     gap: 20px;
 }
 
 .form-main-info{
     width: 100%;
     display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 25px;
-}
-
-.form-main-info-block{
-    width: 100%;
-    display: flex;
     flex-direction: column;
+    align-items: center;
     gap: 25px;
 }
 

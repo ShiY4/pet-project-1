@@ -1,0 +1,10 @@
+.add-item-modal-buttons__button_add_blocked{
+    background-color: var(--main-bg-color);
+    color: var(--blocked-font-color);
+}
+
+.button.add-item-modal-buttons__button_add_blocked:hover{
+    cursor:default;
+    background-color: var(--main-bg-color);
+    color: var(--blocked-font-color);
+}

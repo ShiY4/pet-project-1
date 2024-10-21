@@ -5,16 +5,12 @@ import OpenItemModal from '../ItemsModalWindows/OpenItem/OpenItem.jsx';
 import './Analytics.css';
 
 //Firebase
-import { collection, getDocs, onSnapshot } from 'firebase/firestore';
-import db from '../firebase/firebase.js';
+import { collection, onSnapshot } from 'firebase/firestore';
+import db, { getItems } from '../firebase/firebase.js';
 
 //Получение сслыки на коллекцию айтемов из базы данных
 const itemsCollectionRef = collection(db, 'users', 'user', 'items');
-async function getItems (){
-  const data = await getDocs(itemsCollectionRef);
-  return data.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
-};
-let items = await getItems()
+let items = await getItems(itemsCollectionRef)
 
 // Рендер элемментов списка
 function renderItemsList(itemsList, openItemClick) {
@@ -25,7 +21,7 @@ function renderItemsList(itemsList, openItemClick) {
   };
 
   const result = itemsList.map((item) => {
-    const { img, title, coast, id, type,  date, category, description} = item;
+    const { img, title, coast, id, type,  date, category } = item;
     return (
       <div className={`analytics-list-item ${colors[type]}`} key={id}>
         <div className="analytics-list-item__content"
@@ -56,20 +52,22 @@ function AnalyticsList() {
     setId(e.currentTarget.id)
   }
 
-  //Обновление списка при добавлении\удалении айтема
+  //Обновление списка при добавлении\удалении\изменении айтема
   useEffect(() => {
     const unsubscribe = onSnapshot(itemsCollectionRef, (snapshot) => {
       snapshot.docChanges().forEach(async (change) => {
         if (change.type === 'added') {
-          items = await getItems();
           console.log('Новый айтем добавлен:');
+          items = await getItems(itemsCollectionRef);
           setItems(renderItemsList(items, (e) => hand(e)));
         } else if (change.type === 'modified') {
           console.log('Пользователь обновлен:');
-          // Обновите itemsList, если необходимо
+          items = await getItems(itemsCollectionRef);
+          setItems(renderItemsList(items, (e) => hand(e)));
         } else if (change.type === 'removed') {
           console.log('Пользователь удален:');
-          // Обновите itemsList, если необходимо
+          items = await getItems(itemsCollectionRef);
+          setItems(renderItemsList(items, (e) => hand(e)));
         }
       });
     });

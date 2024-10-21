@@ -1,19 +1,12 @@
-import { Toggle } from '../../components/Buttons/ToggleButton/ToggleButton.jsx';
-import React, {useState, useEffect, useMemo} from 'react';
+import React, { useState, useCallback } from 'react';
 import './OpenItem.css';
 
 //Firebase
-import { collection, getDocs, addDoc } from 'firebase/firestore';
+import { getDoc, doc, setDoc } from 'firebase/firestore';
 import db from '../../firebase/firebase.js';
 
 function OpenItemModal({id, onModalClose, itemsList }) {
-    console.log('xxxx')
-    //Получение сслыки на коллекцию айтемов из базы данных
-    const itemsCollectionRef = collection(db, 'users', 'user', 'items');
-    async function getItem() {
-        const data = await getDocs(itemsCollectionRef);
-        return data.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
-    }; 
+    console.log('rendered openItemModl')
 
     function parseItemInfo(id, itemsList) {
         let item = {}
@@ -34,30 +27,33 @@ function OpenItemModal({id, onModalClose, itemsList }) {
     const [ modaldate, setDate ] = useState(date); //Стейт даты
     const [ modalitemCategory,  setItemCategory ] = useState(itemCategory); //Стейт категори айтема
 
-    //Кнопка "Закрыть"
-    const handleClose = () => {
+    const [ isChanged, setChanged ] = useState(true);
+
+    //Кнопка "Отменить"
+    const handleClose = useCallback((e) => {
         onModalClose();
-    };
+    }, [onModalClose]);
     
     //Кнопка "Изменить"
-    const handleAdd = async () => {
-        //Получение сслыки на коллекцию айтемов из базы данных
-        const itemsCollectionRef = collection(db, 'users', 'user', 'items');
+    const handleChangeitem = async (e) => {
+        e.preventDefault();
+        //Получение айтема из базы данных
+        const item = doc(db, 'users', 'user', 'items', id);
+        const itemSnapshot = await getDoc(item);
 
-        const newItem = {
-            title: title,
-            coast: coast,
-            date: date,
-            type: type,
-            category: itemCategory,
-        };
-        await addDoc(itemsCollectionRef, newItem);
+        setDoc(itemSnapshot.ref, {
+            title: modaltitle,
+            coast: modalcoast,
+            date: modaldate,
+            type: modaltype,
+        });
         onModalClose();
     };
 
     //Обработчик даты
     const handleDateChange = (event) => {
         setDate(event.target.value);
+        setChanged(false);
     };
 
   //Валидация названия
@@ -67,6 +63,7 @@ function OpenItemModal({id, onModalClose, itemsList }) {
         const letterValue = value.replace(/[^a-zA-Zа-яА-Я0-9\s]/g, '');
         e.target.value = letterValue;
         setTitle(e.target.value);
+        setChanged(false);
     }; 
 
     //Валидация суммы
@@ -78,28 +75,24 @@ function OpenItemModal({id, onModalClose, itemsList }) {
         const cleanedValue = numericValue.replace(/\.{2,}/g, '.').replace(/^(\d*\.\d*)\./, '$1');
         e.target.value = cleanedValue;
         setCoast(e.target.value);
+        setChanged(false);
     };
 
-  //Смена типа "Расход"\"Доход"
+    //Смена типа "Расход"\"Доход"
     const handleChangeType = (props) => {
         const itemType = props.target.getAttribute('data-item-type');
         setType(itemType);
+        setChanged(false);
     };
 
+    //Смена категории
     const handlerChangeCategory = (e) =>{
-        const value = e.target.value
-        setItemCategory(value)
-    }
+        const value = e.target.value;
+        setItemCategory(value);
+        setChanged(false);
+    };
 
-    const setButtonType = () => {
-        const revenueButton = document.querySelector('form-button_revenue')
-        const expensesButton = document.querySelector('form-button_expenses')
-        // if(type === 'revenue') {
-        //     revenueButton.click();
-        // } else expensesButton.click();
-        console.log(expensesButton, revenueButton)
-    }
-
+    //Отрисовка кнопок типа
     const renderTypeButtons = (type) => {
         let expensesButtonClass = '';
         let revenueButtonClass = '';
@@ -120,7 +113,6 @@ function OpenItemModal({id, onModalClose, itemsList }) {
         return(
             <div className='form-item_buttons'>
                 <button
-                //   ref={revenueRef}
                     type='button'
                     data-item-type='revenue'
                     className={`button form-button form-button_revenue ${activateRevenueButton(type)}`}
@@ -129,7 +121,6 @@ function OpenItemModal({id, onModalClose, itemsList }) {
                     Доходы
                 </button>
                 <button
-                //   ref={expensesRef}
                     type='button'
                     data-item-type='expenses'
                     className={`button form-button form-button_expenses ${activateExpensesButton(type)}`}
@@ -138,48 +129,59 @@ function OpenItemModal({id, onModalClose, itemsList }) {
                     Расходы
                 </button>
             </div>
-        )
+        );
+    };
+
+    const blockedChangeButton = () => {
+        if(isChanged === true){
+            return `button add-item-modal-buttons__button add-item-modal-buttons__button_add add-item-modal-buttons__button_add_blocked`;
+        } return `button add-item-modal-buttons__button add-item-modal-buttons__button_add`;
     };
 
     return(
-        <div className='add-item-modal-container' onLoad={setButtonType}>
+        <div className='add-item-modal-container'>
             <form className='form'>
                 <div className="form-main-info">
-                    <div className="form-main-info-block">
-                        <div className='form-item'>
-                            <input className='form-item__input form-item__input_title' type="text" onChange={titleValidation} value={modaltitle}/>
-                        </div>
-                        <div className='form-item'>
-                            <input className='form-item__input form-item__input_coast' type="text" onChange={coastValidation} value={modalcoast}/>
-                        </div>
-                        <div className='form-item'>
-                        {renderTypeButtons(modaltype)}
-                        </div>
-                        <div className='form-item'>
-                            <select className='form-item__input category' type="text" onChange={handlerChangeCategory}>
-                                <option value="">Категория</option>
-                                {/* {categories} */}
-                            </select>
-                        </div>
-                        <div className='form-item'>
-                            <input className='form-item__input form-item__input_date' 
-                                type="date" 
-                                value={modaldate}
-                                onChange={handleDateChange}
-                            />
-                        </div> 
+                    <div className='form-item'>
+                        <input className='form-item__input form-item__input_title' type="text" onChange={titleValidation} value={modaltitle}/>
                     </div>
+                    <div className='form-item'>
+                        <input className='form-item__input form-item__input_coast' type="text" onChange={coastValidation} value={modalcoast}/>
+                    </div>
+                    <div className='form-item'>
+                        {renderTypeButtons(modaltype)}
+                    </div>
+                    <div className='form-item'>
+                        <select className='form-item__input category' type="text" onChange={handlerChangeCategory}>
+                            <option value="">Категория</option>
+                            {/* {categories} */}
+                        </select>
+                    </div>
+                    <div className='form-item'>
+                        <input className='form-item__input form-item__input_date' 
+                            type="date" 
+                            value={modaldate}
+                            onChange={handleDateChange}
+                        />
+                    </div> 
+                </div>
+                <div className="add-item-modal-buttons">
+                    <button
+                        type='button'
+                        className='button add-item-modal-buttons__button add-item-modal-buttons__button_cancel'
+                        onClick={handleClose}
+                    >
+                        Отменить
+                    </button>
+                    <button
+                        disabled={isChanged}
+                        className={blockedChangeButton()}
+                        onClick={handleChangeitem}
+                    >
+                        Изменить
+                    </button>
                 </div>
             </form>
-
-            <div className="add-item-modal-buttons">
-                <button
-                    className='button add-item-modal-buttons__button add-item-modal-buttons__button_add'
-                    onClick={handleClose}
-                >
-                    Изменить
-                </button>
-            </div>
         </div>
     )
 };

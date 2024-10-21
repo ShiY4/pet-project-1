@@ -1,5 +1,5 @@
 import { initializeApp } from 'firebase/app';
-import { getFirestore } from 'firebase/firestore';
+import { getFirestore, getDocs, addDoc, collection } from 'firebase/firestore';
 
 const config = {
     apiKey: "AIzaSyAqQ0XLTSjn29Ln249FcRfScyupM6d920A",
@@ -15,3 +15,15 @@ const firebaseApp = initializeApp(config);
 const db = getFirestore(firebaseApp);
 
 export default db;
+
+export async function getItems (ref){
+    const data = await getDocs(ref);
+    return data.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
+};
+
+export async function getCategories (ref){
+    const data = await getDocs(ref);
+    const newData = data.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
+    console.log('getCategories:', newData);
+    return newData
+};
