@@ -14,14 +14,14 @@ let items = await getItems(itemsCollectionRef)
 
 // Рендер элемментов списка
 function renderItemsList(itemsList, openItemClick) {
-
+  
   const colors = {
     'revenue': `analytics-list-item_revenue`,
     'expenses':`analytics-list-item_expenses`
   };
 
   const result = itemsList.map((item) => {
-    const { img, title, coast, id, type,  date, category } = item;
+    const { img, title, coast, id, type } = item;
     return (
       <div className={`analytics-list-item ${colors[type]}`} key={id}>
         <div className="analytics-list-item__content"
@@ -42,7 +42,9 @@ function renderItemsList(itemsList, openItemClick) {
 
 // Отрисовка списка
 function AnalyticsList() {
-  const [ itemsList, setItems ] = useState(renderItemsList(items, (e) => hand(e)));
+  const [ itemsList, setItems ] = useState(() => {
+    return renderItemsList(items, (e) => hand(e))
+  });
   const [ isModalActive, setModalActive ] = useState(false);
   const [ isOpenItemModal, setOpenItemModal ] = useState(false);
   const [ id, setId ] = useState('');
@@ -61,7 +63,7 @@ function AnalyticsList() {
           items = await getItems(itemsCollectionRef);
           setItems(renderItemsList(items, (e) => hand(e)));
         } else if (change.type === 'modified') {
-          console.log('Пользователь обновлен:');
+          console.log('Айтем обновлен:');
           items = await getItems(itemsCollectionRef);
           setItems(renderItemsList(items, (e) => hand(e)));
         } else if (change.type === 'removed') {
@@ -80,10 +82,10 @@ function AnalyticsList() {
   const filterItems = (e) => {
     const filtertype = e.target.getAttribute('filtertype')
     if (filtertype === 'all') {
-      setItems(renderItemsList(items, () => setOpenItemModal(true)));
+      setItems(renderItemsList(items, (e) => hand(e)));
     } else{
       const result = items.filter((item) => item.type === filtertype);
-      setItems(renderItemsList(result, () => setOpenItemModal(true)));
+      setItems(renderItemsList(result, (e) => hand(e)));
     };
   };
 

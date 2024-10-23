@@ -1,9 +1,9 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useState, useEffect } from 'react';
 import './AddItem.css';
 
 //Firebase
 import { collection, addDoc } from 'firebase/firestore';
-import db, {getCategories} from '../../firebase/firebase.js';
+import db, { getCategories } from '../../firebase/firebase.js';
 
 //Получение ссылок на коллекции категорий из базы данных
 const revenueCategoriesRef = collection(db, 'users', 'user', 'revenue-categories');
@@ -25,6 +25,7 @@ function renderCategories(categoriesArr) {
 function renderTypeButtons(type, changeTypeHandler) {
   let expensesButtonClass = '';
   let revenueButtonClass = '';
+
   const activateRevenueButton = () => {
     if (type === 'revenue') {
       revenueButtonClass = 'form-button_revenue_active'
@@ -68,8 +69,15 @@ function AddItemModal({ onModalClose }) {
   const [ type, setType ] = useState('revenue'); //Стейт типа
   const [ date, setDate ] = useState(new Date().toISOString().split('T')[0]); //Стейт даты
   const [ itemCategory,  setItemCategory ] = useState(''); //Стейт категори айтема
-
   const [ categories,  setCategories ] = useState(renderCategories(revenueCategories)); //Стейт доступных категорий
+
+  useEffect(() => {
+    if(type === 'expenses') {
+      setCategories(renderCategories(expenseCategories))
+    } else if (type === 'revenue'){
+      setCategories(renderCategories(revenueCategories))
+    };
+  }, [type]);
 
   //Кнопка "Отмена"
   const handleClose = useCallback((e) => {
@@ -90,8 +98,7 @@ function AddItemModal({ onModalClose }) {
       date: date,
     };
 
-    console.log(typeof newItem.title, typeof newItem.coast, typeof newItem.type, typeof newItem.category, typeof newItem.date)
-    if(newItem.title !== '' && newItem.coast !== '' && newItem.type !== '' && newItem.itemCategory !== '') {
+    if(newItem.title !== '' && newItem.coast !== '' && newItem.type !== '' && newItem.category !== '') {
       await addDoc(itemsCollectionRef, newItem);
       onModalClose();
     } else {
@@ -131,6 +138,7 @@ function AddItemModal({ onModalClose }) {
     setType(itemType);
   }, []);
 
+  //Смена категории
   const handlerChangeCategory = useCallback((e) =>{
     const value = e.target.value
     setItemCategory(value)
@@ -161,7 +169,7 @@ function AddItemModal({ onModalClose }) {
           </div>
           <div className='form-item'>
             <select 
-              className='form-item__input category'
+              className='form-item__input'
               type="text"
               onChange={handlerChangeCategory}
             >

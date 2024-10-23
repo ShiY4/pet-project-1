@@ -192,12 +192,20 @@
 
 }
 
+.add-item-modal-buttons__button_add-category{
+    height: 30px;
+    min-width: 30px;
+}
+
 .add-item-modal-buttons__button_add:hover, .add-item-modal-buttons__button:focus{
     background-color: #558abb;
     color: var(--white-font-color);
 }
 
-.add-item-modal-buttons__button_cancel:hover, .add-item-modal-buttons__button_cancel:focus{
+.add-item-modal-buttons__button_cancel:hover, 
+.add-item-modal-buttons__button_cancel:focus, 
+.add-item-modal-buttons__button_add-category:hover,
+.add-item-modal-buttons__button_add-category:focus{
     background-color: #fff;
     color: #000;
 }
